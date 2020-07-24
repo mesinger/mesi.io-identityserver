@@ -49,7 +49,8 @@ namespace IdentityServer
                     AllowedScopes = new []
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "test"
                     }
                 }, 
             };

@@ -41,6 +41,8 @@ namespace MVCClient
                     options.ResponseType = "code";
 
                     options.SaveTokens = true;
+                    
+                    options.Scope.Add("test");
                 });
         }
 
