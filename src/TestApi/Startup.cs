@@ -19,6 +19,16 @@ namespace TestApi
         {
             services.AddControllers();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("default", policy =>
+                {
+                    policy.WithOrigins("http://localhost:8080")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
@@ -49,6 +59,8 @@ namespace TestApi
 
             app.UseRouting();
 
+            app.UseCors("default");
+            
             app.UseAuthentication();
             app.UseAuthorization();
 
