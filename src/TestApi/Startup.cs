@@ -33,10 +33,7 @@ namespace TestApi
                 .AddJwtBearer("Bearer", options =>
                 {
                     options.Authority = "https://localhost:5001";
-                    options.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateAudience = false,
-                    };
+                    options.Audience = "test";
                 });
 
             services.AddAuthorization(options =>
@@ -44,7 +41,7 @@ namespace TestApi
                 options.AddPolicy("ApiScope", policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", "test");
+                    policy.RequireClaim("scope", "test.read");
                 });
             });
         }

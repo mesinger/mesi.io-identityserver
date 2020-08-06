@@ -42,7 +42,9 @@ namespace MVCClient
 
                     options.SaveTokens = true;
                     
-                    options.Scope.Add("test");
+                    options.Scope.Add("test.read");
+                    options.Scope.Add("test.write");
+                    options.Scope.Add("offline_access");
                 });
         }
 

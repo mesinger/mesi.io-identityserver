@@ -24,7 +24,7 @@ namespace Client
                 Address = discoveryDocumentResponse.TokenEndpoint,
                 ClientId = "client",
                 ClientSecret = "secret",
-                Scope = "test"
+                Scope = "test.read test.write"
             });
 
             if (tokenResponse.IsError)

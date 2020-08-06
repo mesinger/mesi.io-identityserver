@@ -20,7 +20,18 @@ namespace IdentityServer
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
             {
-                new ApiScope("test", "IdentityServer4 Test API"), 
+                new ApiScope("test.read", "IdentityServer4 Test API"), 
+                new ApiScope("test.write", "IdentityServer4 Test API"), 
+            };
+
+        public static IEnumerable<ApiResource> ApiResources =>
+            new[]
+            {
+                new ApiResource("test", "Test API")
+                {
+                    Scopes = {"test.read", "test.write"},
+                    UserClaims = {"name"}
+                },
             };
 
         public static IEnumerable<Client> Clients =>
@@ -34,7 +45,7 @@ namespace IdentityServer
                     {
                         new Secret("secret".Sha256())
                     },
-                    AllowedScopes = {"test"}
+                    AllowedScopes = {"test.read", "test.write"}
                 }, 
                 new Client()
                 {
@@ -50,8 +61,12 @@ namespace IdentityServer
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "test"
-                    }
+                        "test.read",
+                        "test.write",
+                        "offline_access"
+                    },
+                    AllowOfflineAccess = true,
+                    RefreshTokenUsage = TokenUsage.ReUse
                 }, 
                 new Client
                 {
