@@ -30,7 +30,7 @@ namespace IdentityServerAspNetIdentity
                 new ApiResource("test", "Test API")
                 {
                     Scopes = {"test.read", "test.write"},
-                    UserClaims = {"name"}
+                    UserClaims = {"name", "email"}
                 },
             };
 
