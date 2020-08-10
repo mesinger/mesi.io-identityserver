@@ -1,5 +1,4 @@
-﻿using IdentityServer4.Test;
-using Mesi.Io.IdentityServer4.Controllers.IdentityServer;
+﻿using Mesi.Io.IdentityServer4.Config;
 using Mesi.Io.IdentityServer4.Data;
 using Mesi.Io.IdentityServer4.Data.Users;
 using Microsoft.AspNetCore.Builder;
@@ -39,24 +38,26 @@ namespace Mesi.Io.IdentityServer4
                 });
             });
             
-            // services.AddDbContext<ApplicationDbContext>(options =>
-            // {
-            //     options.UseSqlite(Configuration.GetSection("UserDatabase:ConnectionString").Value);
-            // });
-            //
-            // services.AddIdentity<ApplicationUser, IdentityRole>(options => { })
-            //     .AddEntityFrameworkStores<ApplicationDbContext>()
-            //     .AddDefaultTokenProviders();
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlite(Configuration.GetSection("UserDatabase:ConnectionString").Value);
+            });
+            
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => { })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             var builder = services.AddIdentityServer()
-                .AddInMemoryIdentityResources(Config.IdentityResources)
-                .AddInMemoryApiResources(Config.ApiResources)
-                .AddInMemoryApiScopes(Config.ApiScopes)
-                .AddInMemoryClients(Config.Clients)
-                // .AddAspNetIdentity<ApplicationUser>();
-                .AddTestUsers(TestUsers.Users);
+                .AddInMemoryIdentityResources(IdentityServerConfig.IdentityResources)
+                .AddInMemoryApiResources(IdentityServerConfig.ApiResources)
+                .AddInMemoryApiScopes(IdentityServerConfig.ApiScopes)
+                .AddInMemoryClients(IdentityServerConfig.Clients)
+                .AddAspNetIdentity<ApplicationUser>();
+                // .AddTestUsers(TestUsers.Users);
 
             builder.AddDeveloperSigningCredential();
+
+            services.AddApplicationDependencies();
         }
 
         public void Configure(IApplicationBuilder app)
