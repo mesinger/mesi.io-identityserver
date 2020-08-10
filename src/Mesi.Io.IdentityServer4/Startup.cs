@@ -1,4 +1,6 @@
-﻿using Mesi.Io.IdentityServer4.Data;
+﻿using IdentityServer4.Test;
+using Mesi.Io.IdentityServer4.Controllers.IdentityServer;
+using Mesi.Io.IdentityServer4.Data;
 using Mesi.Io.IdentityServer4.Data.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,24 +25,38 @@ namespace Mesi.Io.IdentityServer4
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddControllersWithViews();
+            
+            services.AddRouting(options => options.LowercaseUrls = true);
+            
+            services.AddCors(options =>
             {
-                options.UseSqlite(Configuration.GetSection("UserDatabase:ConnectionString").Value);
+                options.AddPolicy("dev", policy =>
+                {
+                    policy.WithOrigins("http://localhost:8080")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
             });
-
-            services.AddIdentity<ApplicationUser, IdentityRole>(options => { })
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            
+            // services.AddDbContext<ApplicationDbContext>(options =>
+            // {
+            //     options.UseSqlite(Configuration.GetSection("UserDatabase:ConnectionString").Value);
+            // });
+            //
+            // services.AddIdentity<ApplicationUser, IdentityRole>(options => { })
+            //     .AddEntityFrameworkStores<ApplicationDbContext>()
+            //     .AddDefaultTokenProviders();
 
             var builder = services.AddIdentityServer()
                 .AddInMemoryIdentityResources(Config.IdentityResources)
                 .AddInMemoryApiResources(Config.ApiResources)
                 .AddInMemoryApiScopes(Config.ApiScopes)
-                .AddInMemoryClients(Config.Clients);
+                .AddInMemoryClients(Config.Clients)
+                // .AddAspNetIdentity<ApplicationUser>();
+                .AddTestUsers(TestUsers.Users);
 
             builder.AddDeveloperSigningCredential();
-            
-            services.AddControllersWithViews();
         }
 
         public void Configure(IApplicationBuilder app)
@@ -50,18 +66,21 @@ namespace Mesi.Io.IdentityServer4
                 app.UseDeveloperExceptionPage();
             }
 
-            // uncomment if you want to add MVC
-            //app.UseStaticFiles();
-            //app.UseRouting();
+            app.UseStaticFiles();
+            app.UseRouting();
+
+            if (Environment.IsDevelopment())
+            {
+                app.UseCors("dev");
+            }
 
             app.UseIdentityServer();
 
-            // uncomment, if you want to add MVC
-            //app.UseAuthorization();
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapDefaultControllerRoute();
-            //});
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+            });
         }
     }
 }

@@ -44,11 +44,15 @@ namespace Mesi.Io.IdentityServer4
                     ClientName = "VueJS Web Frontend",
                     AllowedGrantTypes = GrantTypes.Code,
                     RequireClientSecret = false,
-                    RequirePkce = true,
+                    // RequirePkce = true,
                     
+                    RedirectUris = { "http://localhost:8080/auth/login-callback" },
+                    PostLogoutRedirectUris = { "http://localhost:8080" },
+
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
                         "clipboard.user.read",
                         "clipboard.user.write",
                     }
