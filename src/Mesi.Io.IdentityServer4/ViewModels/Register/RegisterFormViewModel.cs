@@ -10,6 +10,7 @@ namespace Mesi.Io.IdentityServer4.ViewModels.Register
         public string Name { get; set; }
         
         [Required, EmailAddress, DisplayName("Email")]
+        [MaxLength(100)]
         public string Email { get; set; }
         
         [Required, DataType(DataType.Password), DisplayName("Password")]

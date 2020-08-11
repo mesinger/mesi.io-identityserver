@@ -14,7 +14,15 @@ namespace Mesi.Io.IdentityServer4.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<ApplicationUser>(b => b.ToTable("users"));
+            builder.Entity<ApplicationUser>(b =>
+            {
+                b.HasKey(u => u.Id);
+
+                b.Property(u => u.UserName).HasMaxLength(20);
+                b.Property(u => u.Email).HasMaxLength(100);
+                
+                b.ToTable("users");
+            });
         }
     }
 }

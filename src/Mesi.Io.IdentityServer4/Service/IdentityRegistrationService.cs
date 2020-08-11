@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Mesi.Io.IdentityServer4.Data.Users;
@@ -21,10 +22,13 @@ namespace Mesi.Io.IdentityServer4.Service
         /// <inheritdoc />
         public async Task<RegistrationResult> RegisterUser(RegistrationRequest request)
         {
+            var timeStamp = DateTime.UtcNow;
             var user = new ApplicationUser
             {
                 UserName = request.Name,
-                Email = request.Email
+                Email = request.Email,
+                RegisteredAt = timeStamp,
+                LastModified = timeStamp
             };
 
             var createdResult = await _userManager.CreateAsync(user, request.Password);
