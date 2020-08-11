@@ -1,3 +1,4 @@
+using IdentityServer4.Stores;
 using Mesi.Io.IdentityServer4.Service;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -7,7 +8,22 @@ namespace Mesi.Io.IdentityServer4.Config
     {
         public static IServiceCollection AddApplicationDependencies(this IServiceCollection service)
         {
-            service.AddTransient<IRegistrationService, IdentityRegistrationService>();
+            return service
+                .AddIdentityServerDependencies()
+                .AddOwnDependencies();
+        }
+
+        private static IServiceCollection AddOwnDependencies(this IServiceCollection service)
+        {
+            service.AddScoped<IRegistrationService, IdentityRegistrationService>();
+
+            return service;
+        }
+        
+        private static IServiceCollection AddIdentityServerDependencies(this IServiceCollection service)
+        {
+            service.AddScoped<ISigningCredentialStore, SigningCredentialStore>();
+            service.AddScoped<IValidationKeysStore, ValidationKeyStore>();
 
             return service;
         }

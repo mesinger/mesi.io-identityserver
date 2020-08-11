@@ -1,6 +1,7 @@
 ﻿using Mesi.Io.IdentityServer4.Config;
 using Mesi.Io.IdentityServer4.Data;
 using Mesi.Io.IdentityServer4.Data.Users;
+using Mesi.Io.IdentityServer4.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -36,28 +37,37 @@ namespace Mesi.Io.IdentityServer4
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
+                
+                options.AddPolicy("default", policy =>
+                {
+                    policy.WithOrigins("https://mesi.io")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
             });
-            
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlite(Configuration.GetSection("UserDatabase:ConnectionString").Value);
-            });
-            
+                if (Environment.IsDevelopment())
+                {
+                    options.UseSqlite(Configuration.GetSection("UserDatabase:ConnectionString").Value);
+                }
+            });   
+
             services.AddIdentity<ApplicationUser, IdentityRole>(options => { })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            var builder = services.AddIdentityServer()
+            services.AddIdentityServer()
                 .AddInMemoryIdentityResources(IdentityServerConfig.IdentityResources)
                 .AddInMemoryApiResources(IdentityServerConfig.ApiResources)
                 .AddInMemoryApiScopes(IdentityServerConfig.ApiScopes)
-                .AddInMemoryClients(IdentityServerConfig.Clients)
+                .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
                 .AddAspNetIdentity<ApplicationUser>();
-                // .AddTestUsers(TestUsers.Users);
-
-            builder.AddDeveloperSigningCredential();
 
             services.AddApplicationDependencies();
+
+            services.Configure<CertificateOptions>(Configuration.GetSection("Certificate"));
         }
 
         public void Configure(IApplicationBuilder app)
@@ -73,6 +83,10 @@ namespace Mesi.Io.IdentityServer4
             if (Environment.IsDevelopment())
             {
                 app.UseCors("dev");
+            }
+            else
+            {
+                app.UseCors("default");
             }
 
             app.UseIdentityServer();

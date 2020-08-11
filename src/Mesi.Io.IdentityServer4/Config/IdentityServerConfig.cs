@@ -34,29 +34,5 @@ namespace Mesi.Io.IdentityServer4.Config
                 new ApiScope("clipboard.user.read", "Clipboard API User Read Access"), 
                 new ApiScope("clipboard.user.write", "Clipboard API User Write Access"),
             };
-
-        public static IEnumerable<Client> Clients =>
-            new []
-            {
-                new Client
-                {
-                    ClientId = "vuejs-client",
-                    ClientName = "VueJS Web Frontend",
-                    AllowedGrantTypes = GrantTypes.Code,
-                    RequireClientSecret = false,
-                    RequirePkce = true,
-                    
-                    RedirectUris = { "http://localhost:8080/auth/login-callback" },
-                    PostLogoutRedirectUris = { "http://localhost:8080" },
-
-                    AllowedScopes =
-                    {
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile,
-                        "clipboard.user.read",
-                        "clipboard.user.write",
-                    }
-                }, 
-            };
     }
 }
