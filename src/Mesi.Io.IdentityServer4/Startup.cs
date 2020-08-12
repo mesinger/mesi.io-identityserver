@@ -4,11 +4,13 @@ using Mesi.Io.IdentityServer4.Data.Users;
 using Mesi.Io.IdentityServer4.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace Mesi.Io.IdentityServer4
 {
@@ -25,6 +27,9 @@ namespace Mesi.Io.IdentityServer4
 
         public void ConfigureServices(IServiceCollection services)
         {
+            Log.Information($"UserDB: {Configuration.GetSection("UserDatabase:ConnectionString").Value}");
+            Log.Information($"Private cert: {Configuration.GetSection("Certificate:Private").Value}");
+            Log.Information($"Public cert: {Configuration.GetSection("Certificate:Public").Value}");
             services.AddControllersWithViews();
             
             services.AddRouting(options => options.LowercaseUrls = true);
@@ -95,6 +100,7 @@ namespace Mesi.Io.IdentityServer4
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
+                endpoints.MapGet("/heartbeat", async context => await context.Response.WriteAsync("heartbeat"));
             });
         }
     }

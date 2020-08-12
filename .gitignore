@@ -7,6 +7,9 @@
 *.jwk
 *.db
 *.key
+*.zip
+publish/
+is4/
 
 # User-specific files
 *.rsuser
