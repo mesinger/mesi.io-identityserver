@@ -1,10 +1,12 @@
-﻿using Mesi.Io.IdentityServer4.Config;
+﻿using System.Net;
+using Mesi.Io.IdentityServer4.Config;
 using Mesi.Io.IdentityServer4.Data;
 using Mesi.Io.IdentityServer4.Data.Users;
 using Mesi.Io.IdentityServer4.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -30,9 +32,10 @@ namespace Mesi.Io.IdentityServer4
             Log.Information($"UserDB: {Configuration.GetSection("UserDatabase:ConnectionString").Value}");
             Log.Information($"Private cert: {Configuration.GetSection("Certificate:Private").Value}");
             Log.Information($"Public cert: {Configuration.GetSection("Certificate:Public").Value}");
-            services.AddControllersWithViews();
             
+            services.AddControllersWithViews();
             services.AddRouting(options => options.LowercaseUrls = true);
+            services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = ForwardedHeaders.All);
             
             services.AddCors(options =>
             {
@@ -77,12 +80,25 @@ namespace Mesi.Io.IdentityServer4
 
         public void Configure(IApplicationBuilder app)
         {
+            // this shouldn't be necessary as the scheme should be taken from the forwarded headers, but on aws this does not work ...
+            if (!Environment.IsDevelopment())
+            {
+                app.Use((context, next) =>
+                {
+                    context.Request.Scheme = "https";
+                    return next();
+                });
+            }
+            
+            app.UseForwardedHeaders();
+            
             if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseStaticFiles();
+
             app.UseRouting();
 
             if (Environment.IsDevelopment())
