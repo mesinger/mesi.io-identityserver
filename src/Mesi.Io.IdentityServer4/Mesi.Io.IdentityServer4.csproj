@@ -35,9 +35,22 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+    <Content Remove="logs\**" />
   </ItemGroup>
   
   <ItemGroup>
     <Folder Include="ViewModels\IdentityServer" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Remove="logs\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Remove="logs\**" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove="logs\**" />
   </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@ class Build : NukeBuild
   ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
   ///   - Microsoft VSCode           https://nuke.build/vscode
 
-  public static int Main() => Execute<Build>(x => x.AwsIs4);
+  public static int Main() => Execute<Build>(x => x.Package);
 
   [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
   readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
@@ -45,12 +45,12 @@ class Build : NukeBuild
         });
       });
 
-  Target AwsIs4 => _ => _
+  Target Package => _ => _
       .DependsOn(Clean)
       .Executes(() =>
       {
-        EnsureCleanDirectory("publish");
-        DeleteDirectory("publish");
+        EnsureCleanDirectory("package");
+        DeleteDirectory("package");
         DeleteFile("is4.zip");
 
         DotNetPublish(s => s
@@ -61,9 +61,9 @@ class Build : NukeBuild
         CopyFile("docker/Dockerfile-IdentityServer4", "publish/is4/Dockerfile");
         CopyFile("docker/docker-compose.yml", "publish/is4/docker-compose.yml");
 
-        CompressionTasks.Compress("publish", RootDirectory / "is4.zip");
+        CompressionTasks.Compress("package", RootDirectory / "is4.zip");
 
-        EnsureCleanDirectory("publish");
-        DeleteDirectory("publish");
+        EnsureCleanDirectory("package");
+        DeleteDirectory("package");
       });
 }

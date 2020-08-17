@@ -10,6 +10,7 @@
 *.zip
 publish/
 is4/
+logs/
 
 # User-specific files
 *.rsuser
