@@ -8,6 +8,9 @@ services:
 
     ports:
       - 40300:5000
+      
+    volumes:
+      - ./logs:/app/logs
 
     healthcheck:
       test: curl -f http://localhost:5000/heartbeat || exit 1

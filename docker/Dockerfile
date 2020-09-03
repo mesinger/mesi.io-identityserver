@@ -5,6 +5,8 @@ COPY app .
 
 EXPOSE 5000
 
+VOLUME logs/
+
 ARG userdb
 ARG private
 ARG public

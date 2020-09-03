@@ -55,11 +55,11 @@ class Build : NukeBuild
 
         DotNetPublish(s => s
           .SetProject(Src / "Mesi.Io.IdentityServer4")
-          .SetOutput("publish/is4/app")
+          .SetOutput("package/is4/app")
           .SetConfiguration("Release"));
 
-        CopyFile("docker/Dockerfile-IdentityServer4", "publish/is4/Dockerfile");
-        CopyFile("docker/docker-compose.yml", "publish/is4/docker-compose.yml");
+        CopyFile("docker/Dockerfile", "package/is4/Dockerfile");
+        CopyFile("docker/docker-compose.yml", "package/is4/docker-compose.yml");
 
         CompressionTasks.Compress("package", RootDirectory / "is4.zip");
 

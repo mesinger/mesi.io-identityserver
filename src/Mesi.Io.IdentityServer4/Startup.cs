@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Mesi.Io.IdentityServer4.Config;
+﻿using Mesi.Io.IdentityServer4.Config;
 using Mesi.Io.IdentityServer4.Data;
 using Mesi.Io.IdentityServer4.Data.Users;
 using Mesi.Io.IdentityServer4.Options;
@@ -29,6 +28,7 @@ namespace Mesi.Io.IdentityServer4
 
         public void ConfigureServices(IServiceCollection services)
         {
+            Log.Information($"Configuration: {Environment.EnvironmentName}");
             Log.Information($"UserDB: {Configuration.GetSection("UserDatabase:ConnectionString").Value}");
             Log.Information($"Private cert: {Configuration.GetSection("Certificate:Private").Value}");
             Log.Information($"Public cert: {Configuration.GetSection("Certificate:Public").Value}");
@@ -59,6 +59,10 @@ namespace Mesi.Io.IdentityServer4
                 if (Environment.IsDevelopment())
                 {
                     options.UseSqlite(Configuration.GetSection("UserDatabase:ConnectionString").Value);
+                }
+                else
+                {
+                    options.UseNpgsql(Configuration.GetSection("UserDatabase:ConnectionString").Value);
                 }
             });   
 

@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.6" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
 
     <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
   </ItemGroup>
@@ -36,9 +37,15 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
     <Content Remove="logs\**" />
+    <Content Update="appsettings.Staging.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
   
   <ItemGroup>
+    <Folder Include="Migrations" />
     <Folder Include="ViewModels\IdentityServer" />
   </ItemGroup>
   
