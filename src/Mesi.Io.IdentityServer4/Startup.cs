@@ -32,11 +32,11 @@ namespace Mesi.Io.IdentityServer4
             Log.Information($"UserDB: {Configuration.GetSection("UserDatabase:ConnectionString").Value}");
             Log.Information($"Private cert: {Configuration.GetSection("Certificate:Private").Value}");
             Log.Information($"Public cert: {Configuration.GetSection("Certificate:Public").Value}");
-            
+
             services.AddControllersWithViews();
             services.AddRouting(options => options.LowercaseUrls = true);
             services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = ForwardedHeaders.All);
-            
+
             services.AddCors(options =>
             {
                 options.AddPolicy("dev", policy =>
@@ -45,7 +45,7 @@ namespace Mesi.Io.IdentityServer4
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
-                
+
                 options.AddPolicy("default", policy =>
                 {
                     policy.WithOrigins("https://mesi.io")
@@ -56,16 +56,9 @@ namespace Mesi.Io.IdentityServer4
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                if (Environment.IsDevelopment())
-                {
-                    options.UseSqlite(Configuration.GetSection("UserDatabase:ConnectionString").Value);
-                }
-                else
-                {
-                    options.UseNpgsql(Configuration.GetSection("UserDatabase:ConnectionString").Value);
-                }
-            });   
-
+                options.UseNpgsql(Configuration.GetSection("UserDatabase:ConnectionString").Value);
+            });
+            
             services.AddIdentity<ApplicationUser, IdentityRole>(options => { })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -93,14 +86,14 @@ namespace Mesi.Io.IdentityServer4
                     return next();
                 });
             }
-            
+
             app.UseForwardedHeaders();
-            
+
             if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
             app.UseStaticFiles();
 
             app.UseRouting();
