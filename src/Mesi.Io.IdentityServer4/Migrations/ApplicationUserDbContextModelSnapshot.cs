@@ -3,17 +3,15 @@ using System;
 using Mesi.Io.IdentityServer4.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Mesi.Io.IdentityServer4.Migrations.Staging
+namespace Mesi.Io.IdentityServer4.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200924224605_InitialStaging")]
-    partial class InitialStaging
+    [DbContext(typeof(ApplicationUserDbContext))]
+    partial class ApplicationUserDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,7 +19,7 @@ namespace Mesi.Io.IdentityServer4.Migrations.Staging
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Mesi.Io.IdentityServer4.Data.Users.ApplicationUser", b =>
+            modelBuilder.Entity("Mesi.Io.IdentityServer4.Data.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -34,6 +32,7 @@ namespace Mesi.Io.IdentityServer4.Migrations.Staging
                         .HasColumnType("text");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
@@ -58,6 +57,7 @@ namespace Mesi.Io.IdentityServer4.Migrations.Staging
                         .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
@@ -76,10 +76,14 @@ namespace Mesi.Io.IdentityServer4.Migrations.Staging
                         .HasColumnType("boolean");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("character varying(20)")
                         .HasMaxLength(20);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -87,6 +91,9 @@ namespace Mesi.Io.IdentityServer4.Migrations.Staging
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasName("UserNameIndex");
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
 
                     b.ToTable("users");
                 });
@@ -232,7 +239,7 @@ namespace Mesi.Io.IdentityServer4.Migrations.Staging
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Mesi.Io.IdentityServer4.Data.Users.ApplicationUser", null)
+                    b.HasOne("Mesi.Io.IdentityServer4.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -241,7 +248,7 @@ namespace Mesi.Io.IdentityServer4.Migrations.Staging
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Mesi.Io.IdentityServer4.Data.Users.ApplicationUser", null)
+                    b.HasOne("Mesi.Io.IdentityServer4.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -256,7 +263,7 @@ namespace Mesi.Io.IdentityServer4.Migrations.Staging
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Mesi.Io.IdentityServer4.Data.Users.ApplicationUser", null)
+                    b.HasOne("Mesi.Io.IdentityServer4.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -265,7 +272,7 @@ namespace Mesi.Io.IdentityServer4.Migrations.Staging
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Mesi.Io.IdentityServer4.Data.Users.ApplicationUser", null)
+                    b.HasOne("Mesi.Io.IdentityServer4.Data.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

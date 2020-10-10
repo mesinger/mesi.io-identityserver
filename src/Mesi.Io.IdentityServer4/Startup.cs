@@ -1,7 +1,9 @@
-﻿using Mesi.Io.IdentityServer4.Config;
+﻿using IdentityServer4.Stores;
+using Mesi.Io.IdentityServer4.Config;
 using Mesi.Io.IdentityServer4.Data;
-using Mesi.Io.IdentityServer4.Data.Users;
+using Mesi.Io.IdentityServer4.Data.Entities;
 using Mesi.Io.IdentityServer4.Options;
+using Mesi.Io.IdentityServer4.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -54,23 +56,40 @@ namespace Mesi.Io.IdentityServer4
                 });
             });
 
+            services.AddDbContext<ApplicationUserDbContext>(options =>
+            {
+                options.UseNpgsql(Configuration.GetConnectionString("UserDatabase"));
+            });
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseNpgsql(Configuration.GetSection("UserDatabase:ConnectionString").Value);
+                options.UseNpgsql(Configuration.GetConnectionString("UserDatabase"));
             });
             
             services.AddIdentity<ApplicationUser, IdentityRole>(options => { })
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddEntityFrameworkStores<ApplicationUserDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddIdentityServer()
+            var builder = services.AddIdentityServer()
                 .AddInMemoryIdentityResources(IdentityServerConfig.IdentityResources)
                 .AddInMemoryApiResources(IdentityServerConfig.ApiResources)
                 .AddInMemoryApiScopes(IdentityServerConfig.ApiScopes)
                 .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
                 .AddAspNetIdentity<ApplicationUser>();
 
-            services.AddApplicationDependencies();
+            if (Environment.IsDevelopment())
+            {
+                builder.AddDeveloperSigningCredential();
+            }
+
+            if (!Environment.IsDevelopment())
+            {
+                services.AddScoped<ISigningCredentialStore, SigningCredentialStore>();
+                services.AddScoped<IValidationKeysStore, ValidationKeyStore>();
+            }
+
+            services.AddScoped<IRegistrationService, IdentityRegistrationService>();
+            services.AddScoped<IClientStore, ClientStore>();
 
             services.Configure<CertificateOptions>(Configuration.GetSection("Certificate"));
         }

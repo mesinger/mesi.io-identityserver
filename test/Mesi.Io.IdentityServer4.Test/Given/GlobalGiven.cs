@@ -1,4 +1,4 @@
-using Mesi.Io.IdentityServer4.Data.Users;
+using Mesi.Io.IdentityServer4.Data.Entities;
 
 namespace Mesi.Io.IdentityServer4.Test.Given
 {

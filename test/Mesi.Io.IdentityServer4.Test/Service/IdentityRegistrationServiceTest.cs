@@ -1,5 +1,5 @@
 using System.Linq;
-using Mesi.Io.IdentityServer4.Data.Users;
+using Mesi.Io.IdentityServer4.Data.Entities;
 using Mesi.Io.IdentityServer4.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;

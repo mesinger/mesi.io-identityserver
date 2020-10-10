@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Mesi.Io.IdentityServer4.Migrations.Staging
+namespace Mesi.Io.IdentityServer4.Migrations
 {
-    public partial class InitialStaging : Migration
+    public partial class AddApplicationUser : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,12 +27,12 @@ namespace Mesi.Io.IdentityServer4.Migrations.Staging
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 20, nullable: true),
+                    UserName = table.Column<string>(maxLength: 20, nullable: false),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    Email = table.Column<string>(maxLength: 100, nullable: true),
+                    Email = table.Column<string>(maxLength: 100, nullable: false),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(nullable: false),
-                    PasswordHash = table.Column<string>(nullable: true),
+                    PasswordHash = table.Column<string>(nullable: false),
                     SecurityStamp = table.Column<string>(nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
@@ -182,6 +182,12 @@ namespace Mesi.Io.IdentityServer4.Migrations.Staging
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_users_Email",
+                table: "users",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "EmailIndex",
                 table: "users",
                 column: "NormalizedEmail");
@@ -190,6 +196,12 @@ namespace Mesi.Io.IdentityServer4.Migrations.Staging
                 name: "UserNameIndex",
                 table: "users",
                 column: "NormalizedUserName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_users_UserName",
+                table: "users",
+                column: "UserName",
                 unique: true);
         }
 

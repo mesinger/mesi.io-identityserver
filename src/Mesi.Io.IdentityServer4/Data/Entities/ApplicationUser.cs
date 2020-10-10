@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Identity;
 
-namespace Mesi.Io.IdentityServer4.Data.Users
+namespace Mesi.Io.IdentityServer4.Data.Entities
 {
     public class ApplicationUser : IdentityUser
     {

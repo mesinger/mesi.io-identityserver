@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Mesi.Io.IdentityServer4.Data.Users;
+using Mesi.Io.IdentityServer4.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 

@@ -12,7 +12,7 @@ using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
-using Mesi.Io.IdentityServer4.Data.Users;
+using Mesi.Io.IdentityServer4.Data.Entities;
 using Mesi.Io.IdentityServer4.ViewModels.IdentityServer.Account;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -230,6 +230,11 @@ namespace Mesi.Io.IdentityServer4.Controllers.IdentityServer.Account
 
                 // this triggers a redirect to the external provider for sign-out
                 return SignOut(new AuthenticationProperties {RedirectUri = url}, vm.ExternalAuthenticationScheme);
+            }
+
+            if (!string.IsNullOrWhiteSpace(vm.PostLogoutRedirectUri))
+            {
+                return Redirect(vm.PostLogoutRedirectUri);
             }
 
             return View("LoggedOut", vm);
