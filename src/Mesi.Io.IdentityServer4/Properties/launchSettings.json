@@ -1,20 +1,12 @@
 {
   "profiles": {
-    "Dev": {
+    "app": {
       "commandName": "Project",
       "launchBrowser": false,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "https://localhost:14000"
-    },
-    "KestrelStaging": {
-      "commandName": "Project",
-      "launchBrowser": false,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Staging"
-      },
-      "applicationUrl": "https://localhost:5001"
     }
   }
 }

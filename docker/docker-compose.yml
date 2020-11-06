@@ -11,6 +11,11 @@ services:
       
     volumes:
       - ./logs:/app/logs
+      - ${MESI_IO_IDENTITY_SERVER_Certificate__Private}:/app/cert
+
+    environment:
+      - MESI_IO_IDENTITY_SERVER_ConnectionStrings__UserDatabase
+      - MESI_IO_IDENTITY_SERVER_Certificate__Private
 
     healthcheck:
       test: curl -f http://localhost:5000/heartbeat || exit 1

@@ -2,7 +2,6 @@
 using Mesi.Io.IdentityServer4.Config;
 using Mesi.Io.IdentityServer4.Data;
 using Mesi.Io.IdentityServer4.Data.Entities;
-using Mesi.Io.IdentityServer4.Options;
 using Mesi.Io.IdentityServer4.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace Mesi.Io.IdentityServer4
 {
@@ -30,11 +29,6 @@ namespace Mesi.Io.IdentityServer4
 
         public void ConfigureServices(IServiceCollection services)
         {
-            Log.Information($"Configuration: {Environment.EnvironmentName}");
-            Log.Information($"UserDB: {Configuration.GetSection("UserDatabase:ConnectionString").Value}");
-            Log.Information($"Private cert: {Configuration.GetSection("Certificate:Private").Value}");
-            Log.Information($"Public cert: {Configuration.GetSection("Certificate:Public").Value}");
-
             services.AddControllersWithViews();
             services.AddRouting(options => options.LowercaseUrls = true);
             services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = ForwardedHeaders.All);
@@ -76,26 +70,21 @@ namespace Mesi.Io.IdentityServer4
                 .AddInMemoryApiScopes(IdentityServerConfig.ApiScopes)
                 .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
                 .AddAspNetIdentity<ApplicationUser>();
-
-            if (Environment.IsDevelopment())
-            {
-                builder.AddDeveloperSigningCredential();
-            }
-
-            if (!Environment.IsDevelopment())
-            {
-                services.AddScoped<ISigningCredentialStore, SigningCredentialStore>();
-                services.AddScoped<IValidationKeysStore, ValidationKeyStore>();
-            }
+            
+            services.AddScoped<ISigningCredentialStore, SigningCredentialStore>();
 
             services.AddScoped<IRegistrationService, IdentityRegistrationService>();
             services.AddScoped<IClientStore, ClientStore>();
-
-            services.Configure<CertificateOptions>(Configuration.GetSection("Certificate"));
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, ILogger<Startup> logger)
         {
+            logger.LogInformation("----- Settings -----");
+            logger.LogInformation($"Configuration: {Environment.EnvironmentName}");
+            logger.LogInformation($"UserDB: {Configuration.GetConnectionString("UserDatabase")}");
+            logger.LogInformation($"Private cert path: {Configuration.GetSection("Certificate:Private").Value}");
+            logger.LogInformation($"Public cert path: {Configuration.GetSection("Certificate:Public").Value}");
+            
             // this shouldn't be necessary as the scheme should be taken from the forwarded headers, but on aws this does not work ...
             if (!Environment.IsDevelopment())
             {

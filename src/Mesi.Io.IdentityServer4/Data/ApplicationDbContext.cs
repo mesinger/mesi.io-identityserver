@@ -40,6 +40,7 @@ namespace Mesi.Io.IdentityServer4.Data
     public class ApplicationDbContext : DbContext
     {
         public DbSet<IdentityServerClient> IdentityServerClients { get; set; }
+        public DbSet<ApplicationSecret> Secrets { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -95,6 +96,15 @@ namespace Mesi.Io.IdentityServer4.Data
                 b.HasIndex(c => c.ClientId).IsUnique();
 
                 b.ToTable("identityserver_clients");
+            });
+
+            modelBuilder.Entity<ApplicationSecret>(b =>
+            {
+                b.ToTable("t_secrets");
+
+                b.Property(s => s.Value)
+                    .HasColumnName("value")
+                    .IsRequired();
             });
         }
     }

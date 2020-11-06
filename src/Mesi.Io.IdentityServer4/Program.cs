@@ -1,8 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
-
-
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
@@ -12,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Mesi.Io.IdentityServer4
 {
-    public class Program
+    public static class Program
     {
         public static int Main(string[] args)
         {
@@ -38,9 +34,13 @@ namespace Mesi.Io.IdentityServer4
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseSerilog()
+                .ConfigureAppConfiguration(config =>
+                {
+                    config.AddEnvironmentVariables("MESI_IO_IDENTITY_SERVER_");
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

@@ -22,7 +22,7 @@ namespace Mesi.Io.IdentityServer4.Service
         /// <inheritdoc />
         public async Task<Client> FindClientByIdAsync(string clientId)
         {
-            var client = await _dbContext.IdentityServerClients.SingleAsync(c => c.ClientId == clientId);
+            var client = await _dbContext.IdentityServerClients.SingleOrDefaultAsync(c => c.ClientId == clientId);
             return client.ToIdentityServerClient();
         }
     }
