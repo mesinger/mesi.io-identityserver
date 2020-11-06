@@ -2,20 +2,18 @@ version: '3.7'
 
 services:
 
-  mesi-io-identity-server-4:
-    image: mesi/is4
-    container_name: identity-server-4
+  mesi-io-is4:
+    build: .
+    container_name: mesi-io-is4
 
     ports:
       - 40300:5000
       
     volumes:
       - ./logs:/app/logs
-      - ${MESI_IO_IDENTITY_SERVER_Certificate__Private}:/app/cert
 
     environment:
       - MESI_IO_IDENTITY_SERVER_ConnectionStrings__UserDatabase
-      - MESI_IO_IDENTITY_SERVER_Certificate__Private
 
     healthcheck:
       test: curl -f http://localhost:5000/heartbeat || exit 1
