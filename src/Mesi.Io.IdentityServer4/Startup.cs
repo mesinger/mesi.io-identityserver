@@ -29,26 +29,9 @@ namespace Mesi.Io.IdentityServer4
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddRazorPages();
             services.AddRouting(options => options.LowercaseUrls = true);
             services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = ForwardedHeaders.All);
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy("dev", policy =>
-                {
-                    policy.WithOrigins("http://localhost:8080")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
-
-                options.AddPolicy("default", policy =>
-                {
-                    policy.WithOrigins("https://mesi.io")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
-            });
 
             services.AddDbContext<ApplicationUserDbContext>(options =>
             {
@@ -68,13 +51,14 @@ namespace Mesi.Io.IdentityServer4
                 .AddInMemoryIdentityResources(IdentityServerConfig.IdentityResources)
                 .AddInMemoryApiResources(IdentityServerConfig.ApiResources)
                 .AddInMemoryApiScopes(IdentityServerConfig.ApiScopes)
-                .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
                 .AddAspNetIdentity<ApplicationUser>();
             
             services.AddScoped<ISigningCredentialStore, SigningCredentialStore>();
+            services.AddScoped<IValidationKeysStore, ValidationKeyStore>();
+            
+            services.AddScoped<IClientStore, ClientStore>();
 
             services.AddScoped<IRegistrationService, IdentityRegistrationService>();
-            services.AddScoped<IClientStore, ClientStore>();
         }
 
         public void Configure(IApplicationBuilder app, ILogger<Startup> logger)
@@ -102,25 +86,13 @@ namespace Mesi.Io.IdentityServer4
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles();
-
             app.UseRouting();
-
-            if (Environment.IsDevelopment())
-            {
-                app.UseCors("dev");
-            }
-            else
-            {
-                app.UseCors("default");
-            }
 
             app.UseIdentityServer();
 
-            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapDefaultControllerRoute();
+                endpoints.MapRazorPages();
                 endpoints.MapGet("/heartbeat", async context => await context.Response.WriteAsync("heartbeat"));
             });
         }

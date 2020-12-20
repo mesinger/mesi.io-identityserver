@@ -3,7 +3,7 @@ version: '3.7'
 services:
 
   mesi-io-is4:
-    build: .
+    image: mesi/is4
     container_name: mesi-io-is4
 
     ports:

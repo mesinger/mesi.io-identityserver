@@ -31,4 +31,4 @@
       shell: docker build -t mesi/is4 {{ app_path }}
     
     - name: run app
-      shell: docker run --name {{ container_name }} -d -p 14000:5000 -v {{ app_path }}/logs:/app/logs -e MESI_IO_IDENTITY_SERVER_ConnectionStrings__UserDatabase -e ASPNETCORE_Kestrel__Certificates__Default__Password="password" -e ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx -v ${HOME}/.aspnet/https:/https/ mesi/is4
+      shell: docker run --name {{ container_name }} -d -p 40300:5000 -v {{ app_path }}/logs:/app/logs -e MESI_IO_IDENTITY_SERVER_ConnectionStrings__UserDatabase mesi/is4
