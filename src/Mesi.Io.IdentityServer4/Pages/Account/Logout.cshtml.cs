@@ -28,6 +28,11 @@ namespace Mesi.Io.IdentityServer4.Pages.Account
 
         public async Task<IActionResult> OnGet(string logoutId)
         {
+            if (string.IsNullOrWhiteSpace(logoutId))
+            {
+                return BadRequest();
+            }
+            
             var logout = await _interaction.GetLogoutContextAsync(logoutId);
 
             if (User?.Identity?.IsAuthenticated == true)
@@ -36,7 +41,11 @@ namespace Mesi.Io.IdentityServer4.Pages.Account
                 await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
             }
 
-            return Redirect(logout.PostLogoutRedirectUri);
+            var redirectUri = logout?.PostLogoutRedirectUri;
+            
+            return string.IsNullOrWhiteSpace(redirectUri) 
+                ? Page() 
+                : Redirect(redirectUri);
         }
     }
 }

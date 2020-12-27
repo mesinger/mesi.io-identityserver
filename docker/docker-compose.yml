@@ -14,6 +14,8 @@ services:
 
     environment:
       - MESI_IO_IDENTITY_SERVER_ConnectionStrings__UserDatabase
+      - MESI_IO_IDENTITY_SERVER_IdentityServer__Secrets__Private
+      - MESI_IO_IDENTITY_SERVER_IdentityServer__Secrets__Public
 
     healthcheck:
       test: curl -f http://localhost:5000/heartbeat || exit 1

@@ -4,10 +4,7 @@ using System.Threading.Tasks;
 using IdentityServer4;
 using IdentityServer4.Events;
 using IdentityServer4.Services;
-using IdentityServer4.Stores;
-using IdentityServer4.Test;
 using Mesi.Io.IdentityServer4.Data.Entities;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -45,9 +42,16 @@ namespace Mesi.Io.IdentityServer4.Pages.Account
 
         public string ReturnUrl { get; set; }
 
-        public void OnGet(string returnUrl)
+        public IActionResult OnGet(string returnUrl)
         {
+            if (string.IsNullOrWhiteSpace(returnUrl))
+            {
+                return BadRequest();
+            }
+            
             ReturnUrl = returnUrl;
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPost()
@@ -55,6 +59,11 @@ namespace Mesi.Io.IdentityServer4.Pages.Account
             if (!ModelState.IsValid)
             {
                 return Page();
+            }
+
+            if (string.IsNullOrWhiteSpace(ReturnUrl))
+            {
+                return BadRequest();
             }
 
             var context = await _interaction.GetAuthorizationContextAsync(ReturnUrl);

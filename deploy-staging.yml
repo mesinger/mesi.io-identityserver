@@ -31,4 +31,4 @@
       shell: docker build -t mesi/is4 {{ app_path }}
     
     - name: run app
-      shell: docker run --name {{ container_name }} -d -p 40300:5000 -v {{ app_path }}/logs:/app/logs -e MESI_IO_IDENTITY_SERVER_ConnectionStrings__UserDatabase mesi/is4
+      shell: docker run --name {{ container_name }} -d -p 40300:5000 -v {{ app_path }}/logs:/app/logs -e MESI_IO_IDENTITY_SERVER_ConnectionStrings__UserDatabase -e MESI_IO_IDENTITY_SERVER_IdentityServer__Secrets__Private -e MESI_IO_IDENTITY_SERVER_IdentityServer__Secrets__Public mesi/is4

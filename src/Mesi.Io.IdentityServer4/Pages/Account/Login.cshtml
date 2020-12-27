@@ -1,12 +1,22 @@
 @page
 @model Mesi.Io.IdentityServer4.Pages.Account.LoginModel
 
+@{
+    Layout = "Shared/_Layout";
+}
+
 <form method="post">
-    <div asp-validation-summary="ModelOnly"></div>
-    <input asp-for="UserName" placeholder="Username">
-    <span asp-validation-for="UserName"></span>
-    <input asp-for="Password" placeholder="********">
-    <span asp-validation-for="Password"></span>
+    <div class="mb-3">
+        <input type="text" asp-for="UserName" placeholder="Username" class="form-control">
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <input type="password" asp-for="Password" placeholder="********" class="form-control">
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Login</button>
+    </div>
     <input asp-for="ReturnUrl" hidden readonly>
-    <input type="submit" value="Login">
 </form>

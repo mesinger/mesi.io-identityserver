@@ -69,22 +69,28 @@ namespace Mesi.Io.IdentityServer4
             logger.LogInformation("----- Settings -----");
             logger.LogInformation($"Configuration: {Environment.EnvironmentName}");
             logger.LogInformation($"UserDB: {Configuration.GetConnectionString("UserDatabase")}");
+            logger.LogInformation($"Private secret name: {Configuration.GetValue<string>("IdentityServer:Secrets:Private")}");
+            logger.LogInformation($"Public secret name: {Configuration.GetValue<string>("IdentityServer:Secrets:Public")}");
             
-            // this shouldn't be necessary as the scheme should be taken from the forwarded headers, but on aws this does not work ...
             if (!Environment.IsDevelopment())
             {
+                // this shouldn't be necessary as the scheme should be taken from the forwarded headers, but on aws this does not work ...
                 app.Use((context, next) =>
                 {
                     context.Request.Scheme = "https";
                     return next();
                 });
+                
+                app.UseForwardedHeaders();
             }
-
-            app.UseForwardedHeaders();
 
             if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseStatusCodePagesWithReExecute("/error/{0}");
             }
 
             app.UseRouting();
@@ -93,8 +99,8 @@ namespace Mesi.Io.IdentityServer4
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
                 endpoints.MapGet("/heartbeat", async context => await context.Response.WriteAsync("heartbeat"));
+                endpoints.MapRazorPages();
             });
         }
     }
