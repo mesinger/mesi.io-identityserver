@@ -2,6 +2,7 @@
 using Mesi.Io.IdentityServer4.Config;
 using Mesi.Io.IdentityServer4.Data;
 using Mesi.Io.IdentityServer4.Data.Entities;
+using Mesi.Io.IdentityServer4.Options;
 using Mesi.Io.IdentityServer4.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +30,8 @@ namespace Mesi.Io.IdentityServer4
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<IdentityServerSecretOptions>(Configuration.GetSection("IdentityServer:Secrets"));
+            
             services.AddRazorPages();
             services.AddRouting(options => options.LowercaseUrls = true);
             services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = ForwardedHeaders.All);
@@ -66,8 +69,6 @@ namespace Mesi.Io.IdentityServer4
             logger.LogInformation("----- Settings -----");
             logger.LogInformation($"Configuration: {Environment.EnvironmentName}");
             logger.LogInformation($"UserDB: {Configuration.GetConnectionString("UserDatabase")}");
-            logger.LogInformation($"Private cert path: {Configuration.GetSection("Certificate:Private").Value}");
-            logger.LogInformation($"Public cert path: {Configuration.GetSection("Certificate:Public").Value}");
             
             // this shouldn't be necessary as the scheme should be taken from the forwarded headers, but on aws this does not work ...
             if (!Environment.IsDevelopment())
