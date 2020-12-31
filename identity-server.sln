@@ -11,8 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{98AC70DE-9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mesi.Io.IdentityServer4.Test", "test\Mesi.Io.IdentityServer4.Test\Mesi.Io.IdentityServer4.Test.csproj", "{C2157E6D-5629-464C-B429-526C7DAA8C36}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{F5C8F925-09B6-4859-A1FF-881A89ADA76B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

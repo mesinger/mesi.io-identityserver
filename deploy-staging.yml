@@ -3,32 +3,39 @@
   remote_user: pi
 
   vars:
-    root_path: /home/pi/mesi-io
-    app_path: "{{ root_path }}/is4"
-    container_name: mesi-io-is4
+    app_path: /var/www/mesi.io.is4
 
   tasks:
 
-    - name: stop app
-      shell: (docker kill {{ container_name }} || /bin/true) && (docker rm {{ container_name }} || /bin/true)
-
-    - name: clean
+    - name: clean application
       shell: find {{ app_path }} -type f ! -name 'log*' -delete || /bin/true
 
-    - name: create directory
-      file:
-        path: "{{ root_path }}"
-        state: directory
-        mode: 0740
+    - name: delete service file
+      shell: rm -f /etc/systemd/system/mesi.io.is4.service || /bin/true
+      become: yes
+      become_method: sudo
 
-    - name: copy and extract app
-      unarchive:
-        src: is4.zip
-        dest: "{{ root_path }}"
+    - name: copy service file
+      copy:
+        src: ./systemd/mesi.io.is4.service
+        dest: /etc/systemd/system
+      become: yes
+      become_method: sudo
+
+    - name: copy application
+      copy:
+        src: "{{ item }}"
+        dest: "{{ app_path }}"
+        owner: pi
+        group: pi
         mode: 0500
+      with_fileglob:
+        - "./publish/*"
 
-    - name: build app
-      shell: docker build -t mesi/is4 {{ app_path }}
-    
-    - name: run app
-      shell: docker run --name {{ container_name }} -d -p 40300:5000 -v {{ app_path }}/logs:/app/logs -e MESI_IO_IDENTITY_SERVER_ConnectionStrings__UserDatabase -e MESI_IO_IDENTITY_SERVER_IdentityServer__Secrets__Private -e MESI_IO_IDENTITY_SERVER_IdentityServer__Secrets__Public mesi/is4
+    - name: start service
+      systemd:
+        name: mesi.io.is4
+        state: restarted
+        daemon_reload: yes
+      become: yes
+      become_method: sudo
