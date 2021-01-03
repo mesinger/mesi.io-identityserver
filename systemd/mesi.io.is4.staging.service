@@ -10,7 +10,7 @@ KillSignal=SIGINT
 SyslogIdentifier=mesi.io.is4
 User=pi
 EnvironmentFile=/home/pi/mesi-io/envs
-Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_ENVIRONMENT=Staging
 
 [Install]
 WantedBy=multi-user.target

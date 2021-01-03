@@ -1,6 +1,6 @@
 ---
-- hosts: pi
-  remote_user: pi
+- hosts: aws
+  remote_user: ubuntu
 
   vars:
     app_path: /var/www/mesi.io.is4
@@ -17,7 +17,7 @@
 
     - name: copy service file
       copy:
-        src: ./systemd/mesi.io.is4.staging.service
+        src: ./systemd/mesi.io.is4.production.service
         dest: /etc/systemd/system/mesi.io.is4.service
       become: yes
       become_method: sudo
@@ -26,8 +26,8 @@
       copy:
         src: "{{ item }}"
         dest: "{{ app_path }}"
-        owner: pi
-        group: pi
+        owner: ubuntu
+        group: ubuntu
         mode: 0500
       loop:
         - "./publish/is4"

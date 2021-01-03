@@ -14,20 +14,20 @@ namespace Mesi.Io.IdentityServer4.Migrations.ApplicationDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.6")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .UseIdentityByDefaultColumns()
+                .HasAnnotation("Relational:MaxIdentifierLength", 63)
+                .HasAnnotation("ProductVersion", "5.0.1");
 
             modelBuilder.Entity("Mesi.Io.IdentityServer4.Data.Entities.ApplicationSecret", b =>
                 {
                     b.Property<string>("Name")
-                        .HasColumnName("name")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("name");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnName("value")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("value");
 
                     b.HasKey("Name");
 
@@ -39,7 +39,7 @@ namespace Mesi.Io.IdentityServer4.Migrations.ApplicationDb
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<int>("AccessTokenLifetime")
                         .ValueGeneratedOnAdd()
@@ -54,13 +54,13 @@ namespace Mesi.Io.IdentityServer4.Migrations.ApplicationDb
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasColumnType("character varying(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("ClientName")
                         .IsRequired()
-                        .HasColumnType("character varying(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("ClientSecrets")
                         .HasColumnType("text");
