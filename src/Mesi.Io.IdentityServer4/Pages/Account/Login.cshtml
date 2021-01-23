@@ -5,18 +5,25 @@
     Layout = "Shared/_Layout";
 }
 
-<form method="post">
-    <div class="mb-3">
-        <input type="text" asp-for="UserName" placeholder="Username" class="form-control">
-        <span asp-validation-for="UserName" class="text-danger"></span>
+<div class="">
+    <div>
+        <form method="post">
+            <div class="mb-3">
+                <input type="text" asp-for="UserName" placeholder="Username" class="form-control">
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <input type="password" asp-for="Password" placeholder="********" class="form-control">
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+            <input asp-for="ReturnUrl" hidden readonly>
+        </form>
     </div>
-    <div class="mb-3">
-        <input type="password" asp-for="Password" placeholder="********" class="form-control">
-        <span asp-validation-for="Password" class="text-danger"></span>
+    <div>
+        <span>Not already registered? <a asp-page="/account/register" asp-route-returnUrl="@Model.CurrentUrl">Click here</a></span>
     </div>
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="mb-3">
-        <button type="submit" class="btn btn-primary">Login</button>
-    </div>
-    <input asp-for="ReturnUrl" hidden readonly>
-</form>
+</div>

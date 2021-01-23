@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using IdentityServer4;
@@ -6,6 +7,7 @@ using IdentityServer4.Events;
 using IdentityServer4.Services;
 using Mesi.Io.IdentityServer4.Data.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -36,11 +38,13 @@ namespace Mesi.Io.IdentityServer4.Pages.Account
             _logger = logger;
         }
 
-        [Required] public string UserName { get; set; }
+        [Required(ErrorMessage = "Please enter your username")] public string UserName { get; set; }
 
-        [Required] public string Password { get; set; }
+        [Required(ErrorMessage = "Please enter your password")] public string Password { get; set; }
 
         public string ReturnUrl { get; set; }
+        
+        [ReadOnly(true)] public string CurrentUrl { get; set; }
 
         public IActionResult OnGet(string returnUrl)
         {
@@ -50,6 +54,7 @@ namespace Mesi.Io.IdentityServer4.Pages.Account
             }
             
             ReturnUrl = returnUrl;
+            CurrentUrl = HttpContext.Request.GetDisplayUrl();
 
             return Page();
         }
